@@ -1,0 +1,11 @@
+{
+  "name": "file-explorer",
+  "version": "1.0.0",
+  "description": "cli node.js projram",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ashraf Bawer",
+  "license": "ISC"
+}
