@@ -13,12 +13,14 @@ fs.readdir(__dirname, (err, files) => {
 
     console.log("    Select which file or directory you watn to see\n");
 
+    let stats = [];
     function file(i) {
         let filename = files[i];
 
         fs.stat(__dirname + '/' + filename, function(err, stat) {
+            stats[i] = stat
             if(stat.isDirectory()){
-                console.log('       '+i+'         \033[36m'+ filename + '/\033[39m');
+                console.log('        '+ i + '         \033[36m'+ filename + '/\033[39m');
             } else {
                 console.log('        '+ i + '         \033[90m' + filename + '\033[39m');
             }
@@ -35,7 +37,7 @@ fs.readdir(__dirname, (err, files) => {
 
     // Read user input when files are shown
     function read() {
-        console.log('');
+        console.log('Enter "exit" to exit the program');
         stdout.write('        \033[33, enter your Choice: \033[39m');
         stdin.resume();
         stdin.setEncoding('utf8');
@@ -47,11 +49,22 @@ fs.readdir(__dirname, (err, files) => {
         const filename = files[Number(data)];
         if(!filename){
             stdout.write('        \033[31m Enter a Valid choice:  \033[39m');
-        }else {
+        }else if(stats[Number(data)].isDirectory()){
+            stdin.pause();
+            fs.readdir(__dirname + '/' + filename, function(err,files){
+                console.log(' ');
+                console.log('     ( '+ files.length + ' files )');
+                files.forEach(file => {
+                    console.log('     -    ' + file);
+                });
+                console.log(' ');
+            });
+        } else {
             stdin.pause();
             fs.readFile(__dirname + '/' + filename, 'utf8', function(err, data){
                 console.log(' ');
-                console.log('\003[90m' + data.replace(/(.*)/g, '          $1') + '\033[39m');
+                console.log(data);
+                // console.log('\003[90m' + data.replace(/(.*)/g, '          $1') + '\033[39m');
             })
         }
     }
